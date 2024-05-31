@@ -1,2 +1,2 @@
-**foobar**
-A PHP code for replace specific numbers with foo, bar or foobar.
+# foobar
+A PHP code for replacing specific numbers with foo, bar or foobar.
