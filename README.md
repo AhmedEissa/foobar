@@ -1,6 +1,6 @@
-# This repository contains two PHP scripts for two questions:#
+# This repository contains two PHP scripts for two questions:
 ----
-## CSV File to MySQL Database##
+## CSV File to MySQL Database
 This PHP script will be executed from the command line, which accepts a CSV file as input (see user.csv) and processes it. The parsed file data is to be inserted into a MySQL database. 
 
 The user must be able to provide the CSV file as an argument when executing the file.
@@ -16,7 +16,7 @@ The PHP script will need to handle the following criteria correctly:
 
 ----
 
-## Foo, Bar, Foobar##
+## Foo, Bar, Foobar
 A PHP code for replacing specific numbers with foo, bar or foobar.
 * It scans all numbers from 1 to 100 
 * If the number is divisible by three (3) output the word “foo”
