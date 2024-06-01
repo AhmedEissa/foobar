@@ -14,6 +14,10 @@ The PHP script will need to handle the following criteria correctly:
 * Emails need to be set to be lowercase before being inserted into DB.
 * The script should validate the email address before inserting, it to ensure that it is valid (valid means that it is a legal email format, e.g. “xxxx@asdf@asdf” is not legal). In case an email is invalid, no insert should be made to the database and an error message should be reported to STDOUT.
 
+## Examples running from the command line:
+* php Question1.php –help
+* php Question1.php –create_table -u user -p password -h localhost --dry_run
+
 ----
 
 ## Foo, Bar, Foobar
