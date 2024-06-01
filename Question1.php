@@ -5,20 +5,28 @@ set_error_handler(
         throw new ErrorException($message, $severity, $severity, $file, $line);
     }
 );
+// Function to print the help message
+function displayHelp() {
+    echo "Usage: php user_upload.php [options]" . PHP_EOL;
+    echo "Options:" . PHP_EOL;
+    echo "--file [csv file name]     Name of the CSV file to be processed" . PHP_EOL;
+    echo "--create_table             Create the MySQL users table and exit" . PHP_EOL;
+    echo "--dry_run                  Run the script without inserting into the database" . PHP_EOL;
+    echo "-u                         MySQL username" . PHP_EOL;
+    echo "-p                         MySQL password" . PHP_EOL;
+    echo "-h                         MySQL host" . PHP_EOL;
+    echo "--help                     Display this help message" . PHP_EOL;
+    exit;
+}
 
 //get all the commands from the arguments
-$inlineCommand1 = $argv[1];
-$inlineCommand2 = $argv[2];
-$inlineCommand3 = $argv[3];
-$inlineCommand4 = $argv[4];
-$inlineCommand5 = $argv[5];
-$inlineCommand6 = $argv[6];
-$inlineCommand7 = $argv[7];
+$options = getopt("", ["file:", "create_table", "dry_run", "help"], $optind);
+$shortopts = "u:p:h:";
+$options = array_merge($options, getopt($shortopts));
 
-if (str_contains($inlineCommand,"file [")){
-    echo "File option is selected: " . $inlineCommand;
-} elseif (str_contains($inlineCommand,"create_table")){
-    
+// If help option is set, display help and exit
+if (isset($options['help'])) {
+    displayHelp();
 }
 
 /*
