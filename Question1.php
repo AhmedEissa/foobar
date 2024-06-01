@@ -29,6 +29,34 @@ if (isset($options['help'])) {
     displayHelp();
 }
 
+// Check required options for database connection
+if (!isset($options['u']) || !isset($options['p']) || !isset($options['h'])) {
+    echo "Missing database connection parameters." . PHP_EOL;
+    displayHelp();
+}
+
+// Database connection details
+$db_user = $options['u'];
+$db_pass = $options['p'];
+$db_host = $options['h'];
+$db_name = 'users';
+
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error . PHP_EOL);
+}
+
+// If create_table option is set, create the table and exit
+if (isset($options['create_table'])) {
+    createTable($conn);
+}
+
+// If file option is not set, display help and exit
+if (!isset($options['file'])) {
+    echo "CSV file name is required." . PHP_EOL;
+    displayHelp();
+}
 /*
 //get passed in arguments
 $csvFilePath = $argv[1];
