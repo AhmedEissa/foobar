@@ -19,6 +19,23 @@ function displayHelp() {
     exit;
 }
 
+// Function to create the 'users' table
+function createTable($conn) {
+    $query = "CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(50) NOT NULL,
+        surname VARCHAR(50) NOT NULL,
+        email VARCHAR(100) NOT NULL UNIQUE
+    )";
+    if ($conn->query($query) === TRUE) {
+        echo "Table 'users' created successfully." . PHP_EOL;
+    } else {
+        echo "Error creating table: " . $conn->error . PHP_EOL;
+    }
+    $conn->close();
+    exit;
+}
+
 //get all the commands from the arguments
 $options = getopt("", ["file:", "create_table", "dry_run", "help"], $optind);
 $shortopts = "u:p:h:";
@@ -57,17 +74,22 @@ if (!isset($options['file'])) {
     echo "CSV file name is required." . PHP_EOL;
     displayHelp();
 }
-/*
-//get passed in arguments
-$csvFilePath = $argv[1];
 
-//return the file contents if it exists
+// Read and process the CSV file
+$csv_file = $options['file'];
+if (!file_exists($csv_file)) {
+    die("File not found: $csv_file" . PHP_EOL);
+}
+
+//process the csv file contents if it exists
 try
 {
-    echo file_get_contents($csvFilePath).PHP_EOL;
-}
-catch (Exception $ex)
-{
+    if (($handle = fopen($csv_file, "r")) !== FALSE) {
+        
+    }
+} catch (Exception $ex) {
     echo "File not found: ".trim($ex->getMessage()).PHP_EOL;
-}*/
+} finally {
+    $conn->close();
+}
 ?>
