@@ -27,6 +27,6 @@ A PHP code for replacing specific numbers with foo, bar or foobar.
 * If the number is divisible by five (5) output the word “bar”
 * If the number is divisible by three (3) and five (5) output the word “foobar”. We could shorten the code and replace three (3) and five (5) with fifteen (15) as 3 x 5 = 15. 
 
-## 2.2. Examples running from the command line:
+## 2.1. Examples running from the command line:
 * php Question2.php
 
