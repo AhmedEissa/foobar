@@ -21,7 +21,7 @@ function displayHelp() {
 
 // Function to create the 'users' table
 function createTable($conn) {
-    $query = "CREATE TABLE IF NOT EXISTS users (
+    $query = "CREATE TABLE IF NOT EXISTS tblUsers (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(50) NOT NULL,
         surname VARCHAR(50) NOT NULL,
@@ -34,6 +34,15 @@ function createTable($conn) {
     }
     $conn->close();
     exit;
+}
+// Function to validate email
+function validateEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+// Function to capitalise name and surname
+function capitalise($string) {
+    return ucfirst(strtolower($string));
 }
 
 //get all the commands from the arguments
@@ -85,11 +94,62 @@ if (!file_exists($csv_file)) {
 try
 {
     if (($handle = fopen($csv_file, "r")) !== FALSE) {
-        
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            if (count($data) != 3) {
+                echo "Invalid CSV format. Each row must have 3 columns: name, surname, email" . PHP_EOL;
+                continue;
+            }
+
+            list($name, $surname, $email) = $data;
+
+            // Capitalize name and surname
+            $name = capitalise($name);
+            $surname = capitalise($surname);
+            
+            //Trim extra spaces
+            $name = trim($name);
+            $surname = trim($surname);
+
+            // Removes special chars.
+            $name = preg_replace('/[^A-Za-z0-9\-]/', '', $name);
+            $surname = preg_replace('/[^A-Za-z0-9\-]/', '', $surname);
+            
+            // Convert email to lowercase
+            $email = strtolower($email);
+
+            // Validate email
+            $emailIsValid = true;
+            if (!validateEmail($email)) {
+                echo "Invalid email format: $email" . PHP_EOL;
+                $emailIsValid = false;
+                continue;
+            }
+
+            // If dry_run option is set, do not insert into database
+            if (isset($options['dry_run'])) {
+                echo "Dry run: [$name, $surname, $email]" . PHP_EOL;
+            } else {
+                // Insert into database if email is valid.
+                if ($emailIsValid){
+                    $stmt = $conn->prepare("INSERT INTO tblUsers (name, surname, email) VALUES (?, ?, ?)");
+                    $stmt->bind_param("sss", $name, $surname, $email);
+                    if ($stmt->execute()) {
+                        echo "Inserted: [$name, $surname, $email]" . PHP_EOL;
+                    } else {
+                        echo "Error inserting [$name, $surname, $email]: " . $stmt->error . PHP_EOL;
+                    }
+                    $stmt->close();    
+                }
+                else{
+                    echo "No record is added to the database, as the email $email is invalid.". PHP_EOL;
+                }
+            }
+        }
     }
 } catch (Exception $ex) {
-    echo "File not found: ".trim($ex->getMessage()).PHP_EOL;
+    echo "Error opening file: $csv_file, or file not found: ".trim($ex->getMessage()).PHP_EOL;
 } finally {
+    fclose($handle);
     $conn->close();
 }
 ?>
